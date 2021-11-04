@@ -1,7 +1,15 @@
+import { useRouter } from 'next/router';
+
 import Card from '../ui/Card';
 import classes from './MeetupItem.module.css';
 
-function MeetupItem(props) {
+const MeetupItem = props => {
+  const router = useRouter();
+
+  const showDetailsHandler = () => {
+    router.push(`/${props.id}`); // 'router.push()' is the programatic equivalent of using the <Link> component
+  };
+
   return (
     <li className={classes.item}>
       <Card>
@@ -13,11 +21,12 @@ function MeetupItem(props) {
           <address>{props.address}</address>
         </div>
         <div className={classes.actions}>
-          <button>Show Details</button>
+          {/* A <Link> component would be better than a button here. Done this way just to demo navigating programatically. */}
+          <button onClick={showDetailsHandler}>Show Details</button>
         </div>
       </Card>
     </li>
   );
-}
+};
 
 export default MeetupItem;
