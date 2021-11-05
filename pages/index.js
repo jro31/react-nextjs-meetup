@@ -24,12 +24,11 @@ const HomePage = props => {
   return <MeetUpList meetups={props.meetups} />;
 };
 
-// To regenerate a page for EVERY incoming request (meaning that you pregenerate the page, dynamically, on the fly, after deployment, on the server)
-// Then you use 'getServerSideProps()'
-export const getServerSideProps = async context => {
-  const req = context.req; // We aren't using these here, but just for illustrative purposes, you get a 'context' argument in 'getServerSideProps'
-  const res = context.res; // It contains 'req' (the request) and 'res' (the result) in case you need to use them - No idea how or why
-
+// If you don't have data that changes all the time (meaning multiple times per second),
+// and if you don't need access to 'context.req' (for, for example, authentication),
+// then 'getStaticProps()' is the better choice, because there you pregenerate an HTML file,
+// which is faster than pregenerating and fetching data for every incoming request
+export const getStaticProps = async () => {
   // fetching data from an API... (for example)
   const returnedData = DUMMY_MEETUPS;
 
@@ -37,12 +36,8 @@ export const getServerSideProps = async context => {
     props: {
       meetups: returnedData,
     },
+    revalidate: 10,
   };
 };
-// This function will NOT run in the build process
-// Instead it will run on the server, after deployment
-// It will ALWAYS run on the server, NEVER in the client
-// (so you can, for example, run operations that use credentials that should not be exposed to users)
-// You CAN'T set 'revalidate' in this function (and there would be no point because it runs on every request)
 
 export default HomePage;
