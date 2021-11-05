@@ -18,3 +18,10 @@ The second project based on *'Section 23: A (Pretty Deep Dive) Introduction to N
   * And how to fetch the `meetupId` *within* the `getStaticProps()` function
 * Adding the `pages/api/new-meetup.js` file, which sends a 'POST' request to MongoDB using `MongoClient` (from MongoDB), and triggering such a request based on user-entered data in the `pages/new-meetup/index.js` file. And it actually worked. - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/4bb81c920ddf8ad81b8544bca3d21fd541db15a3)
 * Redirecting to the homepage with `useRouter()` after successfully adding a new meetup - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/6743a8121ddf4ac94c411dfb2c526f588af4ec07)
+* Fetching data from the MongoDB database and displaying it on the homepage instead of the dummy data (again using `MongoClient`) - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/bb73c4c754fd7d3cde0a7be843f7ef352cd6c497)
+* Fetching data from the MongoDB database and displaying it on the `pages/[meetupId]/index.js` page instead of the dummy data - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/74ebbc0ea36f0dc4b60704a36fb5fea26f980f38)
+  * Involves using the `find()` function in the `getStaticPaths()` function, to return *just* the `_id` of all the meetup 'documents' (what MongoDB call records) in order to pre-render all iterations of the `pages/[meetupId]/index.js` page
+  * Uses the `findOne()` function in the `getStaticProps()` function to return *just* the document that we want to display
+* Using the Next.js `<Head>` component to add metadata to the html `<head>` tags of the various pages of the app - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/72af37139ccdcde106610205d014f75c840713e2)
+  * Important for SEO
+* Updating the `fallback` return in `getStaticPaths()` from `false` to `'blocked'`, with an explanation of why, and what the difference between `false`, `true` and `'blocked'` is here - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/0747255e47d3b80ca632d0d20e45ab992ff0d2bd)
