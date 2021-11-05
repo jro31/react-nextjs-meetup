@@ -1,36 +1,32 @@
-import { useEffect, useState } from 'react';
-import MeetUpList from '../components/meetups/MeetupList';
+import { MongoClient } from 'mongodb'; // If you import a package and only use it server-side (as we're doing with 'MongoClient') , Next.js will detect this and it will not be part of the client-side bundle
 
-const DUMMY_MEETUPS = [
-  {
-    id: 'm1',
-    title: 'My First Meetup',
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Frauenkirche_and_Neues_Rathaus_Munich_March_2013.JPG/1280px-Frauenkirche_and_Neues_Rathaus_Munich_March_2013.JPG',
-    address: 'My First Meetup address',
-    description: 'This is the first meetup description',
-  },
-  {
-    id: 'm2',
-    title: 'My Second Meetup',
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Englischer_Garten_M%C3%BCnchen.jpg/1280px-Englischer_Garten_M%C3%BCnchen.jpg',
-    address: 'My Second Meetup address',
-    description: 'This is the second meetup description',
-  },
-];
+import MeetUpList from '../components/meetups/MeetupList';
 
 const HomePage = props => {
   return <MeetUpList meetups={props.meetups} />;
 };
 
 export const getStaticProps = async () => {
-  // fetching data from an API... (for example)
-  const returnedData = DUMMY_MEETUPS;
+  // This can be used here as 'getStaticProps()' is rendered server-side, not on the client
+  const client = await MongoClient.connect(
+    `mongodb+srv://jethro:${process.env.MONGO_DB_PASSWORD}@cluster0.uapqi.mongodb.net/meetups?retryWrites=true&w=majority`
+  );
+  const db = client.db();
+
+  const meetupsCollection = db.collection('meetups');
+
+  const meetups = await meetupsCollection.find().toArray(); // By default, the 'find()' function called on a collection, will find all the documents within that collection
+
+  client.close();
 
   return {
     props: {
-      meetups: returnedData,
+      meetups: meetups.map(meetup => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString(), // '_id' is just how it's returned from MongoDB
+      })),
     },
     revalidate: 10,
   };
