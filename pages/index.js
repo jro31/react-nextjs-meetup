@@ -24,10 +24,6 @@ const HomePage = props => {
   return <MeetUpList meetups={props.meetups} />;
 };
 
-// If you don't have data that changes all the time (meaning multiple times per second),
-// and if you don't need access to 'context.req' (for, for example, authentication),
-// then 'getStaticProps()' is the better choice, because there you pregenerate an HTML file,
-// which is faster than pregenerating and fetching data for every incoming request
 export const getStaticProps = async () => {
   // fetching data from an API... (for example)
   const returnedData = DUMMY_MEETUPS;
