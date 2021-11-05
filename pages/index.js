@@ -1,13 +1,22 @@
-import { MongoClient } from 'mongodb'; // If you import a package and only use it server-side (as we're doing with 'MongoClient') , Next.js will detect this and it will not be part of the client-side bundle
+import { Fragment } from 'react';
+import Head from 'next/head'; // 'Head' allows you to add 'head' elements to the '<head>' section of a page
+import { MongoClient } from 'mongodb';
 
 import MeetUpList from '../components/meetups/MeetupList';
 
 const HomePage = props => {
-  return <MeetUpList meetups={props.meetups} />;
+  return (
+    <Fragment>
+      <Head>
+        <title>React Meetups</title>
+        <meta name='description' content='Browse a list of React meetups in your area' />
+      </Head>
+      <MeetUpList meetups={props.meetups} />
+    </Fragment>
+  );
 };
 
 export const getStaticProps = async () => {
-  // This can be used here as 'getStaticProps()' is rendered server-side, not on the client
   const client = await MongoClient.connect(
     `mongodb+srv://jethro:${process.env.MONGO_DB_PASSWORD}@cluster0.uapqi.mongodb.net/meetups?retryWrites=true&w=majority`
   );
@@ -15,7 +24,7 @@ export const getStaticProps = async () => {
 
   const meetupsCollection = db.collection('meetups');
 
-  const meetups = await meetupsCollection.find().toArray(); // By default, the 'find()' function called on a collection, will find all the documents within that collection
+  const meetups = await meetupsCollection.find().toArray();
 
   client.close();
 
@@ -25,7 +34,7 @@ export const getStaticProps = async () => {
         title: meetup.title,
         address: meetup.address,
         image: meetup.image,
-        id: meetup._id.toString(), // '_id' is just how it's returned from MongoDB
+        id: meetup._id.toString(),
       })),
     },
     revalidate: 10,
