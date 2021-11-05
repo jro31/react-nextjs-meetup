@@ -11,3 +11,10 @@ The second project based on *'Section 23: A (Pretty Deep Dive) Introduction to N
   * Note that this approach is still flawed if the data is frequently changed, as it is only refreshed when we run `npm run build` - addressed in the next commit
 * Adding 'Incremental Static Generation' by adding `revalidate` to the object returned from `getStaticProps()`, in order to fix the issue of frequently changing data not being refreshed in the `getStaticProps()` function - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/03112f9cd12fab39db24f817f21fc775b43844ae)
   * Includes an explanation of exactly what is happening
+* Replacing `getStaticProps()` with the `getServerSideProps()` function to regenerate a page on *every* request - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/68f97afaf49452244117038103f00627ba5fe429)
+* When to use `getStaticProps()`, and when to use `getServerSideProps()` - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/d60cae6c16aab1fab974f2d419c57f3c57c39a60)
+* Adding `getStaticProps()` to the `pages/[meetupId]/index.js` dynamic page - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/237689191bda8b4e740a099b8b3bd41788c7b0f1)
+  * Including `getStaticPaths()` (with a long explanation)
+  * And how to fetch the `meetupId` *within* the `getStaticProps()` function
+* Adding the `pages/api/new-meetup.js` file, which sends a 'POST' request to MongoDB using `MongoClient` (from MongoDB), and triggering such a request based on user-entered data in the `pages/new-meetup/index.js` file. And it actually worked. - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/4bb81c920ddf8ad81b8544bca3d21fd541db15a3)
+* Redirecting to the homepage with `useRouter()` after successfully adding a new meetup - [Commit link](https://github.com/jro31/react-nextjs-meetup/commit/6743a8121ddf4ac94c411dfb2c526f588af4ec07)
