@@ -33,8 +33,16 @@ export const getStaticPaths = async () => {
 
   client.close();
 
+  // 'fallback' shouldn't be false here. It works in development, because the 'getStaticPaths()' function is re-run for every render.
+  // However, on production, as users can add pages with new IDs, but this function is only run on build, then if a user adds a new meetup, trying to navigate to that meetup will return a 404
+  // Instead, 'fallback' should be set to true, or to 'blocking'
+  // If it is set to true, or to 'blocking', Next.js will not respond with a 404 if it's unable to find this page
+  // Instead it will generate that page on demand, and thereafter it will be cached (as if pre-generated)
+  // The difference between true and 'blocking', is that true immediately returns an empty page, and then pulls down the dynamically generated content once it's generated
+  // So you need to handle the case that the page does not have the data yet (with a spinner, or displaying 'Loading...' or something)
+  // With 'blocking', the user does not see anything until the page has finished generating, and the generated page is served
   return {
-    fallback: false,
+    fallback: 'blocking',
     paths: meetups.map(meetup => ({
       params: { meetupId: meetup._id.toString() },
     })),
