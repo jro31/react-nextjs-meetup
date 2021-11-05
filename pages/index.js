@@ -24,7 +24,12 @@ const HomePage = props => {
   return <MeetUpList meetups={props.meetups} />;
 };
 
-export const getStaticProps = async () => {
+// To regenerate a page for EVERY incoming request (meaning that you pregenerate the page, dynamically, on the fly, after deployment, on the server)
+// Then you use 'getServerSideProps()'
+export const getServerSideProps = async context => {
+  const req = context.req; // We aren't using these here, but just for illustrative purposes, you get a 'context' argument in 'getServerSideProps'
+  const res = context.res; // It contains 'req' (the request) and 'res' (the result) in case you need to use them - No idea how or why
+
   // fetching data from an API... (for example)
   const returnedData = DUMMY_MEETUPS;
 
@@ -32,13 +37,12 @@ export const getStaticProps = async () => {
     props: {
       meetups: returnedData,
     },
-    revalidate: 10,
   };
-  // Adding the 'revalidate' property to this return object, we unlock a feature called 'Incremental Static Generation'
-  // 'revalidate' has a value of a number, and this number is the number of seconds Next.js will wait before regenerating this page for an incoming request
-  // That means that this page will not just be generated during the build process ('npm run build'), but it will also be generated every 10 seconds on the server (if there are requests coming in for this page)
-  // Thus ensuring that your data is never more than 10 seconds old
-  // (the number you choose depends on how frequently you expect data to change; nothing wrong with having '3600' (or higher) for an app that rarely changes)
 };
+// This function will NOT run in the build process
+// Instead it will run on the server, after deployment
+// It will ALWAYS run on the server, NEVER in the client
+// (so you can, for example, run operations that use credentials that should not be exposed to users)
+// You CAN'T set 'revalidate' in this function (and there would be no point because it runs on every request)
 
 export default HomePage;
